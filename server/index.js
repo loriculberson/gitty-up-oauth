@@ -3,14 +3,16 @@ const app = express();
 const path = require("path");
 const passport = require('passport')
 const GitHubStrategy = require('passport-github2').Strategy;
+const session = require('express-session');
 require('dotenv').config()
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "..", "client", "build")));
 }
 
+app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -26,9 +28,12 @@ passport.use(new GitHubStrategy({
   callbackURL: `${process.env.HOST}/auth/github/callback`
 },
   function(accessToken, refreshToken, profile, done) {
-    console.log('profile', profile)
-
-    return done(null, profile)
+    const user = {
+      displayName: profile.displayName,
+      username: profile.username,
+      image: profile._json.avatar_url
+    } 
+    return done(null, user)
   }
 ));
 
@@ -40,13 +45,22 @@ app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/fail' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    console.log('req user', req.user)
     res.redirect('/');
   });
+
+  app.get('/current-user', (req, res) => {
+    res.send(JSON.stringify({currentUser: req.user}))
+  })
 
   app.get('/fail', (req, res) => {
     res.send("Failed attempt")
   })
+
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+  
 
 app.listen(process.env.PORT || 3001, () => {
   console.log("Server started on: https://localhost:3001");
