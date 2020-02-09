@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./App.css";
 
+function LoggedIn(){
+  return <a href='/logout'>Logout</a> 
+}
+
+function LoggedOut() {
+  return(
+    <a href='/auth/github'>Login with GitHub</a>
+  )
+}
 function App() {
-  // const [content, setContent] = useState("");
-
-  // useEffect(() => {
-  //   fetch("/foo.json").then(response => {
-  //     response.json().then(body => {
-  //       setContent(JSON.stringify(body));
-  //     });
-  //   });
-  // }, []);
-  function loginGithub () {
-    console.log('hii!!!!!')
-
-
-  }
+  const message = false ? <LoggedIn /> : <LoggedOut />
 
   return (
     <div className="App">
-      <a href='/auth/github'>Login with GitHub</a>
+      {message}
     </div>
   );
 }
