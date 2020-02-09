@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently 'yarn start-server' 'yarn start-client'",
-    "heroku-postbuild": "cd server; yarn install",
-    "start": "yarn start-server",
     "start-server": "cd server; yarn start",
-    "start-client": "cd client; yarn start"
+    "start-client": "cd client; yarn start",
+    "dev": "concurrently 'yarn start-server' 'yarn start-client'",
+    "build": "cd client; yarn build",
+    "heroku-postbuild": "cd server; yarn install",
+    "start": "yarn start-server"
   },
   "devDependencies": {
     "concurrently": "^5.1.0"
