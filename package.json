@@ -6,8 +6,10 @@
     "start-server": "cd server; yarn start",
     "start-client": "cd client; yarn start",
     "dev": "concurrently 'yarn start-server' 'yarn start-client'",
-    "build": "cd client && yarn build",
-    "heroku-postbuild": "yarn build && cd server && yarn install",
+    "build-client": "cd client && yarn build",
+    "install-client": "cd client && yarn install",
+    "install-server": "cd server && yarn install",
+    "heroku-postbuild": "yarn install-client && yarn install-server && yarn build-client",
     "start": "yarn start-server"
   },
   "devDependencies": {
